@@ -1,0 +1,17 @@
+{
+  "name": "saa-c03-pdf-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline PDF parsing for SAA-C03 question bank",
+  "scripts": {
+    "extract:en": "node extract-text.mjs en",
+    "extract:zh": "node extract-text.mjs zh",
+    "parse:en": "node parse-en.mjs",
+    "parse:zh": "node parse-zh.mjs",
+    "verify": "node verify.mjs"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^4.7.76"
+  }
+}

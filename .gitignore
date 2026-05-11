@@ -1,0 +1,16 @@
+tools/node_modules/
+tools/raw-en.txt
+tools/raw-zh.txt
+tools/REPORT.md
+tools/alignment.json
+questions/
+
+# Parsing intermediates — runtime only uses data/questions.json
+data/questions.en.json
+data/questions.zh.json
+
+.DS_Store
+*.log
+
+# Local Claude Code session state
+.claude/
