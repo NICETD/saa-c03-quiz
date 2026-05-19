@@ -13,6 +13,7 @@ const K = {
   lang: "saa.lang",
   exams: "saa.exams",
   lastQuiz: "saa.lastQuiz",
+  memos: "saa.memos",
 };
 
 function read(key, fallback) {
@@ -117,6 +118,28 @@ export function getReviewIds(filter, allIds) {
   if (filter === "wrong") return allIds.filter((id) => p[id] && !p[id].correct);
   if (filter === "right") return allIds.filter((id) => p[id] && p[id].correct);
   return [];
+}
+
+/**
+ * Per-question memo (free-form notes). Persists independently of progress;
+ * survives clearProgress / reset of answer state — they follow the question.
+ */
+export function getMemos() {
+  return read(K.memos, {});
+}
+export function getMemo(id) {
+  const m = getMemos();
+  return m[id] || "";
+}
+export function setMemo(id, text) {
+  const m = getMemos();
+  const trimmed = (text || "").trimEnd();
+  if (trimmed) m[id] = trimmed;
+  else delete m[id]; // empty → remove entry, keeps storage tidy
+  write(K.memos, m);
+}
+export function hasMemo(id) {
+  return !!getMemos()[id];
 }
 
 /** Reset everything. Used by a "danger zone" button on stats page. */

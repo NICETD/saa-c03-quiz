@@ -910,6 +910,60 @@ h2 {
   font-style: italic;
 }
 
+/* Per-question memo (auto-saved notes). Lives below explanation, above nav.
+ * Persists across answer / favorite state — follows the question forever. */
+.memo {
+  background: linear-gradient(180deg, var(--bg-1), color-mix(in srgb, var(--accent), var(--bg-1) 96%));
+  border: 1px solid var(--border);
+  border-left: 4px solid color-mix(in srgb, var(--accent), transparent 30%);
+  border-radius: var(--radius);
+  padding: 16px 20px 14px;
+  margin: 18px 0 0;
+  box-shadow: var(--shadow-sm);
+}
+.memo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.memo-title {
+  font-size: var(--fs-sm);
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+.memo-status {
+  font-size: var(--fs-xs);
+  color: var(--text-dimmer);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: color 0.2s, opacity 0.2s;
+}
+.memo-status-saved { color: var(--good); }
+.memo-status-saved::before { content: "✓ "; }
+.memo-status-typing { color: var(--text-dim); }
+.memo-input {
+  width: 100%;
+  min-height: 72px;
+  resize: vertical;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+  transition: border-color 0.15s, background 0.15s;
+}
+.memo-input::placeholder { color: var(--text-dimmer); }
+.memo-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg-1);
+}
+
 .quiz-nav {
   display: flex;
   gap: 10px;

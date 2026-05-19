@@ -24,6 +24,8 @@ import {
   getReviewIds,
   addExam,
   setLastQuiz,
+  getMemo,
+  setMemo,
 } from "../store.js";
 import { go } from "../router.js";
 
@@ -103,6 +105,7 @@ export async function quiz(params) {
     const stemSection = renderStem(q, lang);
     const optsSection = renderOptions(q, lang, isExam, examPicks, idx, onPick, onConfirmMulti);
     const explanSection = h("div", { class: "explan-area", id: "explan-area" });
+    const memoSection = renderMemo(q.id);
     const navSection = renderNav(idx, ids.length);
     // In-place language switch: re-renders the current question without
     // touching the URL, so the question index and exam picks are preserved.
@@ -120,6 +123,7 @@ export async function quiz(params) {
         stemSection,
         optsSection,
         explanSection,
+        memoSection,
         navSection,
       ),
     );
@@ -416,6 +420,61 @@ function renderStem(q, lang) {
   }
   // EN only
   return h("section", { class: "stem" }, enStem);
+}
+
+// Per-question memo. Auto-saves to localStorage (debounced) so notes stay
+// with the question regardless of answer / favorite state.
+function renderMemo(qid) {
+  const initial = getMemo(qid);
+  const ta = h("textarea", {
+    class: "memo-input",
+    placeholder: t("memoPlaceholder"),
+    rows: 3,
+    spellcheck: "false",
+  });
+  ta.value = initial;
+
+  const status = h("span", { class: "memo-status" }, initial ? t("memoSaved") : "");
+
+  let timer = null;
+  let lastSaved = initial;
+  ta.addEventListener("input", () => {
+    status.textContent = t("memoTyping");
+    status.className = "memo-status memo-status-typing";
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      const v = ta.value;
+      if (v !== lastSaved) {
+        setMemo(qid, v);
+        lastSaved = v;
+        status.textContent = t("memoSaved");
+        status.className = "memo-status memo-status-saved";
+      }
+    }, 400);
+  });
+  // Also flush on blur so a quick edit + tab-away always persists.
+  ta.addEventListener("blur", () => {
+    if (timer) clearTimeout(timer);
+    const v = ta.value;
+    if (v !== lastSaved) {
+      setMemo(qid, v);
+      lastSaved = v;
+      status.textContent = t("memoSaved");
+      status.className = "memo-status memo-status-saved";
+    }
+  });
+
+  return h(
+    "section",
+    { class: "memo" },
+    h(
+      "div",
+      { class: "memo-head" },
+      h("span", { class: "memo-title" }, "📝 ", t("memoTitle")),
+      status,
+    ),
+    ta,
+  );
 }
 
 function renderOptions(q, lang, isExam, examPicks, idx, onPick, onConfirmMulti) {
