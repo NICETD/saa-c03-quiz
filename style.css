@@ -644,7 +644,36 @@ h2 {
 }
 
 /* ─── quiz (the centerpiece) ─────────────────────────────── */
-.quiz-main { max-width: 920px; }
+.quiz-main { max-width: 1200px; }
+
+/* Two-column layout: question content + sticky memo sidebar.
+   Below 960px viewport, the grid collapses (see mobile breakpoint). */
+.quiz-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 22px;
+  align-items: start;
+}
+.quiz-content { min-width: 0; }
+.quiz-aside { position: relative; }
+.quiz-aside .memo {
+  position: sticky;
+  /* Sit just below the sticky chrome (brand + dashboard + nav ≈ 200px tall). */
+  top: 210px;
+  margin: 0;
+}
+.quiz-aside .memo-input {
+  /* Slightly taller in the sidebar so notes have room to breathe. */
+  min-height: 220px;
+}
+
+/* Tablet portrait: collapse the grid before things get too cramped. */
+@media (max-width: 960px) {
+  .quiz-body { display: block; }
+  .quiz-aside { margin-bottom: 14px; }
+  .quiz-aside .memo { position: static; top: auto; }
+  .quiz-aside .memo-input { min-height: 100px; }
+}
 
 .quiz-top {
   background: var(--bg-1);
@@ -1319,6 +1348,11 @@ h2 {
   .opt { padding: 14px 16px; }
   .quiz-nav { justify-content: stretch; }
   .quiz-nav > * { flex: 1; min-width: 0; justify-content: center; text-align: center; }
+  /* Below 1024px, the sidebar drops back to inline placement above the stem. */
+  .quiz-body { display: block; }
+  .quiz-aside { margin-bottom: 14px; }
+  .quiz-aside .memo { position: static; top: auto; }
+  .quiz-aside .memo-input { min-height: 100px; }
   .exam-timer { position: static; margin-top: 8px; display: inline-block; }
   .exam-rules { padding: 22px; }
 }

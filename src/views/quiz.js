@@ -118,13 +118,24 @@ export async function quiz(params) {
       h(
         "main",
         { class: "main quiz-main" },
+        // Top row spans full width.
         top,
         lswitch,
-        stemSection,
-        optsSection,
-        explanSection,
-        memoSection,
-        navSection,
+        // Two-column body: question content on the left, sticky memo on the right.
+        // On narrow viewports the grid collapses and the memo moves above the stem.
+        h(
+          "div",
+          { class: "quiz-body" },
+          h(
+            "div",
+            { class: "quiz-content" },
+            stemSection,
+            optsSection,
+            explanSection,
+            navSection,
+          ),
+          h("aside", { class: "quiz-aside" }, memoSection),
+        ),
       ),
     );
     mount(container);
